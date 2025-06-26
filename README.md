@@ -32,7 +32,7 @@ options:
 uv sync
 ```
 
-## Get episodes of interest
+## Get episodes/chapters of interest
 
 ```sh
 uv run main.py anime --new-character ...
