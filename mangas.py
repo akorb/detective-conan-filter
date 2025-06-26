@@ -2,13 +2,9 @@ from io import StringIO
 import re
 
 import pandas as pd
-from common import get_html, to_ranges, sanitize_html, Beziehung, Charakter, Eltern, Gegengift, Gegenstand, Geheim_FBI_CIA, Heiji, Kaito_Kid, Organisation, Vergangenheit, Wichtig
+from common import get_html, to_ranges, sanitize_html
 
 # flake8: noqa
-
-# Specify here in which kinds of episodes you're interested
-interests = [Beziehung, Charakter, Eltern, Gegengift, Gegenstand, Geheim_FBI_CIA, Heiji,
-             Kaito_Kid, Organisation, Vergangenheit, Wichtig]
 
 
 def get_manga_count() -> int:
@@ -17,9 +13,7 @@ def get_manga_count() -> int:
     return int(volumes[-1].split()[1])
 
 
-def main():
-    interests_pattern = "|".join(interests)
-
+def print_mangas(interests_pattern: str):
     manga_count = get_manga_count()
 
     # Manga 52 is the first manga with cases not part
@@ -39,12 +33,11 @@ def main():
         only_interests = chapters_df[chapters_df[('Legende', 'Legende')].str.contains(interests_pattern, regex=True, na=False)]
 
         relevant_volumes = only_interests[('Nummer', 'im Band')].to_list()
+        if len(relevant_volumes) == 0:
+            continue
         relevant_volumes = list(map(int, relevant_volumes))
         volumes_ranges = to_ranges(relevant_volumes)
         volumes_ranges = ['  ' + x for x in volumes_ranges]
         print('Manga:', manga_nr)
         print('\n'.join(volumes_ranges))
 
-
-if __name__ == "__main__":
-    main()

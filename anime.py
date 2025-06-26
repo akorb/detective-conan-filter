@@ -1,18 +1,12 @@
 from io import StringIO
 
 import pandas as pd
-from common import get_html, to_ranges, sanitize_html, Beziehung, Charakter, Eltern, Gegengift, Gegenstand, Geheim_FBI_CIA, Heiji, Kaito_Kid, Organisation, Vergangenheit, Wichtig
+from common import get_html, to_ranges, sanitize_html
 
 # flake8: noqa
 
-# Specify here in which kinds of episodes you're interested
-interests = [Beziehung, Charakter, Eltern, Gegengift, Gegenstand, Geheim_FBI_CIA, Heiji,
-             Kaito_Kid, Organisation, Vergangenheit, Wichtig]
 
-
-def main():
-    interests_pattern = "|".join(interests)
-
+def print_animes(interests_pattern: str):
     html = get_html("https://conanwiki.org/wiki/Liste_der_Anime-Episoden")
     html = sanitize_html(html)
 
@@ -51,7 +45,3 @@ def main():
     episodes_list = list(map(int, episodes_list))
     episodes_ranges = to_ranges(episodes_list)
     print('\n'.join(episodes_ranges))
-
-
-if __name__ == "__main__":
-    main()
