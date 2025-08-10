@@ -19,7 +19,7 @@ def print_animes(interests_pattern: str):
 
     dfs = []
     for season in german_seasons:
-        season.drop(['Bild', 'Deutscher Titel', 'Übersetzter Titel', 'Erstausstrahlung', 'Originaltitel Titel in Rōmaji'],
+        season.drop(['Bild', 'Deutscher Titel', 'Übersetzter Titel', 'Originaltitel Titel in Rōmaji'],
                     axis=1,
                     level=0,
                     errors='ignore',
@@ -31,9 +31,12 @@ def print_animes(interests_pattern: str):
 
         # Remove fillers
         no_fillers = season[~season[('Nummer', 'Manga (Fall)')].str.contains("Filler")]
+        
+        # Remove episodes which are not yet available in german synchronisation
+        only_synced = no_fillers[~no_fillers[('Erstausstrahlung', 'Deutschland')].str.contains("TBA")]
 
         # Remove all episodes which contain no aspects of interest
-        only_interests = no_fillers[no_fillers[('Geschichte', 'Geschichte')].str.contains(interests_pattern, regex=True, na=False)]
+        only_interests = only_synced[only_synced[('Geschichte', 'Geschichte')].str.contains(interests_pattern, regex=True, na=False)]
         dfs.append(only_interests)
 
     episodes_filtered = pd.concat(dfs)
